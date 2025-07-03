@@ -15,19 +15,26 @@ import shutil
 DATA_PARAMS = {
     "START_DATE" : datetime(2017, 8, 17),
     "END_DATE" : datetime(2025, 6 , 29),
-    "BASE_URL" : "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-"
+    "BASE_URL" : "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1m/BTCUSDT-1m-",
+    "DATA_PATH" : "/home/rodrigo/desktop/BTCUSDT-1m"
 }
 
 
 def get_date_range(start, end, interval="days"):
+    range_dates = []
     current = start
     while current <= end:
         yield current
+        range_dates.append(current)
         current += timedelta(days=1)
+    return range_dates
 
 
 def get_price_data():
-    u = DATA_PARAMS["BASE_URL"] + DATA_PARAMS["START_DATE"].strftime("%Y-%m-%d") + ".zip"
-    r = requests.get(u, stream=True)
-    z = zipfile.ZipFile(BytesIO(r.content))
-    z.extractall(path="/home/rodrigo/desktop/BTCUSDT-1m")
+    dls = get_date_range(start=DATA_PARAMS["START_DATE"], end=DATA_PARAMS["END_DATE"])
+    for dl in dls:
+        u = DATA_PARAMS["BASE_URL"] + dl.strftime("%Y-%m-%d") + ".zip"
+        r = requests.get(u, stream=True)
+        z = zipfile.ZipFile(BytesIO(r.content))
+        z.extractall(path=DATA_PARAMS["DATA_PATH"])
+        time.sleep(5)
