@@ -20,7 +20,7 @@ DATA_PARAMS = {
 }
 
 
-def get_date_range(start, end, interval="days"):
+def get_date_range(start, end, interval="days"):    
     range_dates = []
     current = start
     while current <= end:
@@ -28,7 +28,7 @@ def get_date_range(start, end, interval="days"):
         range_dates.append(current)
         current += timedelta(days=1)
     return range_dates
-
+ 
 
 def get_price_data():
     dls = get_date_range(start=DATA_PARAMS["START_DATE"], end=DATA_PARAMS["END_DATE"])
